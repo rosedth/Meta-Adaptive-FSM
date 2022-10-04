@@ -31,9 +31,9 @@ public class Meta_Monitor_FSM extends Monitor{
 			public void onLimitReached(String entry, EntryTracker_FSM tracker) {
 
 				System.out.println("A frequent Unidentified entry detected from Meta-Monitor");	
-//				saveData(new FSMData(sys_U.getFSM().getCurrentState(),event));
-//				saveDataToFile();
-//				sendData();
+				saveData(new ALData("onLimitReached",entry));
+				saveDataToFile();
+				sendData();
 				
 			}
 			
