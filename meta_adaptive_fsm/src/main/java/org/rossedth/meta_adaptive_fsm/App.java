@@ -8,7 +8,6 @@ import org.rossedth.adaptable_adaptive_fsm.AdaptiveLogicListener;
 import org.rossedth.adaptable_adaptive_fsm.Executor_FSM;
 import org.rossedth.adaptable_adaptive_fsm.Monitor_FSM;
 import org.rossedth.adaptable_adaptive_fsm.Reasoner_FSM;
-import org.rossedth.adaptable_adaptive_fsm.Reasoner_FSM.ILimitReachedEvent;
 import org.rossedth.adaptable_adaptive_fsm.Selector_FSM;
 import org.rossedth.adaptable_fsm.GraphViz;
 import org.rossedth.adaptable_fsm.RecognizerFSM;
@@ -29,6 +28,7 @@ import org.rossedth.adaptive_logic.Selector;
 
 class Launcher {
 	public static GraphViz viewer=new GraphViz();
+	public static int max_app_entry;
 
 	public static void main(String[] args) throws FiniteStateMachineException, IOException {
 
@@ -44,6 +44,12 @@ class Launcher {
 
 		viewer.addln(viewer.start_graph());
 		viewer.setup_graph("GraphViz.config");
+
+		
+		/*
+		 * The max. num of appearances allowed for unidentified entries can be loaded from a configuration file. In this case we indicate it will be 3.  
+		 */
+		max_app_entry=3;
 		
         /*
          * Create a AdaptiveLogic instance
@@ -52,15 +58,18 @@ class Launcher {
     	AdaptiveLogic AL=new AdaptiveLogic();
     	createAdaptiveLogic(AL,recognizer);
     	AL.init();
- 
+
+        /*
+         * Create a second AdaptiveLogic instance (meta-adaptive logic)
+         */    	
     	AdaptiveLogic metaAL=new AdaptiveLogic();
     	createMetaAdaptiveLogic(metaAL, AL);
     	metaAL.init();
     	
+    	
     	/*
 		 * Fire some events and print FSM state
 		 */
-
 
 		recognizer.printCurrentState(viewer);
 
@@ -94,7 +103,7 @@ class Launcher {
     
     public static void createAdaptiveLogic(final AdaptiveLogic AL,RecognizerFSM sys_U) {
     	Memory mem= new Memory();
-    	Monitor mon=new Monitor_FSM(mem);
+    	Monitor mon=new Monitor_FSM(mem,max_app_entry);
     	Reasoner rea=new Reasoner_FSM(mem);
     	Selector sel=new Selector_FSM(mem); 
     	Executor ex=new Executor_FSM(mem);

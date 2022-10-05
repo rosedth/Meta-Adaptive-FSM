@@ -23,7 +23,6 @@ public class Meta_Reasoner_FSM extends Reasoner{
 		if (AL_data.getALEvent().equalsIgnoreCase("onLimitReached")){
 			Plan plan=new Plan();
 			List<Action> actions=new ArrayList<Action>();
-			
 			actions.add(new ALAction("block",AL_data.getEntry(),AL_data.getALEvent()));
 			plan.setActions(actions);
 			responses.add(plan);
